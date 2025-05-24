@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
           </div>
           <div className="flex items-center space-x-4">
             <a
-              href="https://github.com"
+              href="https://github.com/location-txl/GitHubAnalyzer"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm hover:text-teal-400 transition-colors flex items-center"
