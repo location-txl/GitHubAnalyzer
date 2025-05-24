@@ -126,3 +126,25 @@ export const parseRepoUrl = (url: string): { owner: string, repo: string } | nul
   
   return null;
 };
+
+export const analyzeReadme = async (owner: string, repo: string): Promise<string | { error: string }> => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-readme`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ owner, repo }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to analyze README');
+    }
+
+    const data = await response.json();
+    return data.analysis;
+  } catch (error) {
+    return { error: error.message };
+  }
+};
