@@ -127,6 +127,34 @@ export const parseRepoUrl = (url: string): { owner: string, repo: string } | nul
   return null;
 };
 
+// Function to get browser language and create appropriate system message
+const getSystemMessage = (): string => {
+  const browserLang = navigator.language || navigator.languages?.[0] || 'en';
+  
+  // Map common language codes to instructions
+  const languageInstructions: { [key: string]: string } = {
+    'zh': '你是一个专门分析GitHub仓库的技术分析师。基于README内容提供简洁而全面的仓库总结。请用中文回答，重点关注主要功能、用途和技术方面。',
+    'zh-CN': '你是一个专门分析GitHub仓库的技术分析师。基于README内容提供简洁而全面的仓库总结。请用中文回答，重点关注主要功能、用途和技术方面。',
+    'zh-TW': '你是一個專門分析GitHub儲存庫的技術分析師。基於README內容提供簡潔而全面的儲存庫總結。請用繁體中文回答，重點關注主要功能、用途和技術方面。',
+    'ja': 'あなたはGitHubリポジトリの分析を専門とする技術アナリストです。READMEの内容に基づいて、簡潔で包括的なリポジトリの要約を提供してください。日本語で回答し、主要な機能、目的、技術的側面に焦点を当ててください。',
+    'ko': '당신은 GitHub 리포지토리 분석을 전문으로 하는 기술 분석가입니다. README 내용을 바탕으로 간결하면서도 포괄적인 리포지토리 요약을 제공해주세요. 한국어로 답변하시고, 주요 기능, 목적, 기술적 측면에 중점을 두세요.',
+    'es': 'Eres un analista técnico especializado en analizar repositorios de GitHub. Proporciona un resumen conciso pero completo del repositorio basado en el contenido del README. Responde en español, enfócate en las características clave, el propósito y los aspectos técnicos.',
+    'fr': 'Vous êtes un analyste technique spécialisé dans l\'analyse des dépôts GitHub. Fournissez un résumé concis mais complet du dépôt basé sur le contenu du README. Répondez en français, en vous concentrant sur les fonctionnalités clés, l\'objectif et les aspects techniques.',
+    'de': 'Sie sind ein technischer Analyst, der sich auf die Analyse von GitHub-Repositories spezialisiert hat. Geben Sie eine prägnante, aber umfassende Zusammenfassung des Repositories basierend auf dem README-Inhalt. Antworten Sie auf Deutsch und konzentrieren Sie sich auf die wichtigsten Funktionen, den Zweck und die technischen Aspekte.',
+    'ru': 'Вы технический аналитик, специализирующийся на анализе GitHub репозиториев. Предоставьте краткое, но всестороннее резюме репозитория на основе содержимого README. Отвечайте на русском языке, сосредоточьтесь на ключевых функциях, назначении и технических аспектах.',
+    'pt': 'Você é um analista técnico especializado em analisar repositórios do GitHub. Forneça um resumo conciso, mas abrangente do repositório baseado no conteúdo do README. Responda em português, focando nas principais funcionalidades, propósito e aspectos técnicos.',
+    'it': 'Sei un analista tecnico specializzato nell\'analisi dei repository GitHub. Fornisci un riassunto conciso ma completo del repository basato sul contenuto del README. Rispondi in italiano, concentrandoti sulle caratteristiche principali, lo scopo e gli aspetti tecnici.'
+  };
+
+  // Get language code (first two characters)
+  const langCode = browserLang.toLowerCase().substring(0, 2);
+  
+  // Return specific instruction or default English
+  return languageInstructions[browserLang.toLowerCase()] || 
+         languageInstructions[langCode] || 
+         'You are a technical analyst specializing in analyzing GitHub repositories. Provide a concise but comprehensive summary of the repository based on its README content. Focus on the key features, purpose, and technical aspects.';
+};
+
 export const analyzeReadme = async (owner: string, repo: string): Promise<string | { error: string }> => {
   try {
     // First, get the README content
@@ -143,13 +171,16 @@ export const analyzeReadme = async (owner: string, repo: string): Promise<string
 
     const readmeContent = readmeResponse.data;
 
+    // Get system message based on browser language
+    const systemMessage = getSystemMessage();
+
     // Then, analyze it with OpenAI
     const openaiResponse = await axios.post('https://api.v3.cm/v1/chat/completions', {
       model: 'gpt-4.1-mini',
       messages: [
         {
           role: 'system',
-          content: 'You are a technical analyst specializing in analyzing GitHub repositories. Provide a concise but comprehensive summary of the repository based on its README content. Focus on the key features, purpose, and technical aspects.'
+          content: systemMessage
         },
         {
           role: 'user',
@@ -171,7 +202,7 @@ export const analyzeReadme = async (owner: string, repo: string): Promise<string
     }
 
     return openaiResponse.data.choices[0].message.content;
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'ECONNABORTED') {
       return { error: 'Request timed out. Please try again.' };
     }

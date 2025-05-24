@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { 
   Star, 
@@ -42,14 +42,27 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
     const [owner, repo] = repository.full_name.split('/');
     const result = await analyzeReadme(owner, repo);
     
-    if ('error' in result) {
+    if (typeof result === 'object' && result !== null && 'error' in result) {
       setAnalysisError(result.error);
     } else {
-      setReadmeAnalysis(result);
+      setReadmeAnalysis(result as string);
     }
     
     setAnalysisLoading(false);
   };
+
+  // Reset analysis state when repository changes and auto-analyze
+  useEffect(() => {
+    if (repository) {
+      // Reset previous analysis state
+      setReadmeAnalysis(null);
+      setAnalysisError(null);
+      setAnalysisLoading(false);
+      
+      // Auto-analyze the new repository
+      handleAnalyzeReadme();
+    }
+  }, [repository]);
 
   if (loading) {
     return <LoadingCard title="Repository Information" />;
@@ -100,7 +113,7 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
             ) : (
               <FileText size={16} className="mr-1" />
             )}
-            Analyze README
+            Re-analyze
           </button>
           <button
             onClick={onAddToComparison}
