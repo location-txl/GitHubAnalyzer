@@ -80,7 +80,7 @@ const Header: React.FC = () => {
               
               {/* Settings Dropdown Menu */}
               {showSettings && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
+                <div className="absolute left-1/2 transform -translate-x-1/2 md:left-auto md:right-0 md:transform-none top-full mt-2 w-72 md:w-80 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
                   <div className="p-4 bg-slate-50 border-b border-slate-200">
                     <h3 className="text-lg font-semibold text-slate-800 mb-1">{t('header.settingsModal.title')}</h3>
                     <p className="text-sm text-slate-600">{t('header.settingsModal.description')}</p>
