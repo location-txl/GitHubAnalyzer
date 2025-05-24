@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import { 
   Star, 
   GitFork, 
@@ -205,8 +206,34 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
           {analysisError ? (
             <p className="text-red-600">{analysisError}</p>
           ) : (
-            <div className="text-slate-700 whitespace-pre-wrap">
-              {readmeAnalysis}
+            <div className="text-slate-700">
+              {readmeAnalysis && (
+                <ReactMarkdown 
+                  components={{
+                    h1: ({children}) => <h1 className="text-xl font-bold mt-4 mb-2 text-slate-800">{children}</h1>,
+                    h2: ({children}) => <h2 className="text-lg font-semibold mt-3 mb-2 text-slate-800">{children}</h2>,
+                    h3: ({children}) => <h3 className="text-base font-medium mt-2 mb-1 text-slate-800">{children}</h3>,
+                    p: ({children}) => <p className="mb-2 text-slate-700">{children}</p>,
+                    ul: ({children}) => <ul className="list-disc pl-5 mb-2 space-y-1">{children}</ul>,
+                    ol: ({children}) => <ol className="list-decimal pl-5 mb-2 space-y-1">{children}</ol>,
+                    li: ({children}) => <li className="text-slate-700">{children}</li>,
+                    code: ({children, className}) => {
+                      const isInline = !className;
+                      return isInline ? (
+                        <code className="bg-slate-100 text-slate-800 px-1 py-0.5 rounded text-sm font-mono">{children}</code>
+                      ) : (
+                        <code className="block bg-slate-100 text-slate-800 p-3 rounded text-sm font-mono overflow-x-auto">{children}</code>
+                      );
+                    },
+                    pre: ({children}) => <pre className="bg-slate-100 p-3 rounded overflow-x-auto mb-2">{children}</pre>,
+                    blockquote: ({children}) => <blockquote className="border-l-4 border-slate-300 pl-4 italic text-slate-600 mb-2">{children}</blockquote>,
+                    strong: ({children}) => <strong className="font-semibold text-slate-800">{children}</strong>,
+                    em: ({children}) => <em className="italic">{children}</em>,
+                  }}
+                >
+                  {readmeAnalysis}
+                </ReactMarkdown>
+              )}
               {analysisLoading && !readmeAnalysis && (
                 <p className="text-slate-500 italic">开始分析...</p>
               )}
