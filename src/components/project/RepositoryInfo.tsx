@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { 
   Star, 
@@ -7,10 +7,13 @@ import {
   AlertCircle, 
   ExternalLink, 
   BarChart,
-  Download
+  Download,
+  FileText,
+  Loader
 } from 'lucide-react';
 import { Repository } from '../../types';
 import { formatRepositoryData, exportAsJson, exportAsCSV } from '../../utils/exportHelpers';
+import { analyzeReadme } from '../../services/githubApi';
 import LoadingCard from '../ui/LoadingCard';
 
 interface RepositoryInfoProps {
@@ -26,6 +29,28 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
   error,
   onAddToComparison
 }) => {
+  const [readmeAnalysis, setReadmeAnalysis] = useState<string | null>(null);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+
+  const handleAnalyzeReadme = async () => {
+    if (!repository) return;
+    
+    setAnalysisLoading(true);
+    setAnalysisError(null);
+    
+    const [owner, repo] = repository.full_name.split('/');
+    const result = await analyzeReadme(owner, repo);
+    
+    if ('error' in result) {
+      setAnalysisError(result.error);
+    } else {
+      setReadmeAnalysis(result);
+    }
+    
+    setAnalysisLoading(false);
+  };
+
   if (loading) {
     return <LoadingCard title="Repository Information" />;
   }
@@ -65,6 +90,18 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
         <h2 className="text-xl font-semibold">Repository Information</h2>
         <div className="flex space-x-2 mt-2 sm:mt-0">
+          <button
+            onClick={handleAnalyzeReadme}
+            disabled={analysisLoading}
+            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          >
+            {analysisLoading ? (
+              <Loader size={16} className="mr-1 animate-spin" />
+            ) : (
+              <FileText size={16} className="mr-1" />
+            )}
+            Analyze README
+          </button>
           <button
             onClick={onAddToComparison}
             className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
@@ -133,6 +170,18 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
           )}
         </div>
       </div>
+      
+      {/* README Analysis Section */}
+      {(readmeAnalysis || analysisError) && (
+        <div className="mb-6 p-4 bg-slate-50 rounded-lg">
+          <h3 className="text-lg font-medium mb-2">README Analysis</h3>
+          {analysisError ? (
+            <p className="text-red-600">{analysisError}</p>
+          ) : (
+            <p className="text-slate-700 whitespace-pre-wrap">{readmeAnalysis}</p>
+          )}
+        </div>
+      )}
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <div className="bg-slate-50 p-3 rounded-lg">
