@@ -35,12 +35,12 @@ export function useGithubData() {
   
   // Reset all data
   const resetData = useCallback(() => {
-    setState({
+    setState(prev => ({
       ...initialState,
-      repositories: state.repositories, // Keep search history
-      comparisonList: state.comparisonList, // Keep comparison list
-    });
-  }, [state.repositories, state.comparisonList]);
+      repositories: prev.repositories, // Keep search history
+      comparisonList: prev.comparisonList, // Keep comparison list
+    }));
+  }, []);
   
   // Fetch repository data
   const fetchRepositoryData = useCallback(async (repoUrl: string) => {
@@ -142,42 +142,44 @@ export function useGithubData() {
   
   // Add repository to comparison list
   const addToComparison = useCallback(() => {
-    const { currentRepository, contributors } = state;
-    
-    if (!currentRepository) return;
-    
-    // Check if already in comparison list
-    if (state.comparisonList.some(repo => repo.id === currentRepository.id)) {
-      toast.error('This repository is already in the comparison list');
-      return;
-    }
-    
-    // Limit to 3 repositories
-    if (state.comparisonList.length >= 3) {
-      toast.error('You can compare up to 3 repositories. Remove one to add another.');
-      return;
-    }
-    
-    const comparableRepo = {
-      id: currentRepository.id,
-      name: currentRepository.name,
-      full_name: currentRepository.full_name,
-      stars: currentRepository.stargazers_count,
-      forks: currentRepository.forks_count,
-      issues: currentRepository.open_issues_count,
-      language: currentRepository.language,
-      contributors: contributors.length,
-      lastUpdate: currentRepository.updated_at,
-      created_at: currentRepository.created_at
-    };
-    
-    setState(prev => ({
-      ...prev,
-      comparisonList: [...prev.comparisonList, comparableRepo]
-    }));
-    
-    toast.success('Added to comparison list');
-  }, [state]);
+    setState(prev => {
+      const { currentRepository, contributors } = prev;
+      
+      if (!currentRepository) return prev;
+      
+      // Check if already in comparison list
+      if (prev.comparisonList.some(repo => repo.id === currentRepository.id)) {
+        toast.error('This repository is already in the comparison list');
+        return prev;
+      }
+      
+      // Limit to 3 repositories
+      if (prev.comparisonList.length >= 3) {
+        toast.error('You can compare up to 3 repositories. Remove one to add another.');
+        return prev;
+      }
+      
+      const comparableRepo = {
+        id: currentRepository.id,
+        name: currentRepository.name,
+        full_name: currentRepository.full_name,
+        stars: currentRepository.stargazers_count,
+        forks: currentRepository.forks_count,
+        issues: currentRepository.open_issues_count,
+        language: currentRepository.language,
+        contributors: contributors.length,
+        lastUpdate: currentRepository.updated_at,
+        created_at: currentRepository.created_at
+      };
+      
+      toast.success('Added to comparison list');
+      
+      return {
+        ...prev,
+        comparisonList: [...prev.comparisonList, comparableRepo]
+      };
+    });
+  }, []);
   
   // Remove repository from comparison list
   const removeFromComparison = useCallback((repoId: number) => {

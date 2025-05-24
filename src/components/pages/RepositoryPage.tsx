@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGithubData } from '../../hooks/useGithubData';
 import SearchBar from '../search/SearchBar';
@@ -10,9 +10,11 @@ import ActivityFeed from '../project/ActivityFeed';
 import ComparisonView from '../comparison/ComparisonView';
 import EmptyState from '../ui/EmptyState';
 
-const Dashboard: React.FC = () => {
+const RepositoryPage: React.FC = () => {
   const { t } = useTranslation();
+  const { owner, repo } = useParams<{ owner: string; repo: string }>();
   const navigate = useNavigate();
+  const currentRepoRef = useRef<string>('');
   
   const { 
     currentRepository,
@@ -29,6 +31,27 @@ const Dashboard: React.FC = () => {
     clearComparison
   } = useGithubData();
   
+  // Auto-load repository data when route parameters change
+  useEffect(() => {
+    if (owner && repo) {
+      const repoIdentifier = `${owner}/${repo}`;
+      
+      // 避免重复请求同一个仓库
+      if (currentRepoRef.current === repoIdentifier) {
+        return;
+      }
+      
+      // 检查当前仓库是否已经是我们想要的仓库
+      if (currentRepository && currentRepository.full_name === repoIdentifier) {
+        currentRepoRef.current = repoIdentifier;
+        return;
+      }
+      
+      currentRepoRef.current = repoIdentifier;
+      fetchRepositoryData(repoIdentifier);
+    }
+  }, [owner, repo, fetchRepositoryData, currentRepository?.full_name]);
+  
   const isAnyLoading = Object.values(loading).some(state => state);
   
   // Handle search with URL update
@@ -36,11 +59,11 @@ const Dashboard: React.FC = () => {
     // Parse repo URL to extract owner and repo
     const match = repoUrl.match(/(?:github\.com\/)?([^\/]+)\/([^\/\s]+)/);
     if (match) {
-      const [, owner, repo] = match;
+      const [, newOwner, newRepo] = match;
       // Clean repo name from .git suffix if present
-      const cleanRepo = repo.replace(/\.git$/, '');
+      const cleanRepo = newRepo.replace(/\.git$/, '');
       // Navigate to the new URL
-      navigate(`/${owner}/${cleanRepo}`);
+      navigate(`/${newOwner}/${cleanRepo}`);
     } else {
       // If it's not a valid format, still try to fetch the data
       fetchRepositoryData(repoUrl);
@@ -119,4 +142,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default RepositoryPage; 

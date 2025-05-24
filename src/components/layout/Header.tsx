@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Activity, Key, X, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
@@ -46,7 +47,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
           {/* Logo and Title */}
-          <div className="flex items-center">
+          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
             <div className="bg-teal-500 p-2 rounded-lg mr-3">
               <Activity size={24} className="text-white" />
             </div>
@@ -54,7 +55,7 @@ const Header: React.FC = () => {
               <h1 className="text-2xl font-bold">{t('header.title')}</h1>
               <p className="text-sm text-slate-300 hidden md:block">{t('header.description')}</p>
             </div>
-          </div>
+          </Link>
           
           {/* Right Side Controls */}
           <div className="flex items-center gap-3">
