@@ -14,7 +14,7 @@ const createApiInstance = () => {
   });
 
   // Get token from localStorage
-  const token = localStorage.getItem('github_token');
+  const token = localStorage.getItem('github_token') ?? import.meta.env.VITE_APP_GITHUB_DEF_TOKEN;
   if (token) {
     instance.defaults.headers.common['Authorization'] = `token ${token}`;
   }
@@ -155,10 +155,15 @@ const getSystemMessage = (): string => {
          'You are a technical analyst specializing in analyzing GitHub repositories. Provide a concise but comprehensive summary of the repository based on its README content. Focus on the key features, purpose, and technical aspects.';
 };
 
-export const analyzeReadme = async (owner: string, repo: string): Promise<string | { error: string }> => {
+export const analyzeReadme = async (
+  owner: string, 
+  repo: string, 
+  onProgress?: (chunk: string) => void
+): Promise<string | { error: string }> => {
   try {
-    // First, get the README content
-    const readmeResponse = await axios.get(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+    // First, get the README content using the configured API instance with token
+    const api = createApiInstance();
+    const readmeResponse = await api.get(`/repos/${owner}/${repo}/readme`, {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
       },
@@ -174,39 +179,97 @@ export const analyzeReadme = async (owner: string, repo: string): Promise<string
     // Get system message based on browser language
     const systemMessage = getSystemMessage();
 
-    // Then, analyze it with OpenAI
-    const openaiResponse = await axios.post('https://api.v3.cm/v1/chat/completions', {
-      model: 'gpt-4.1-mini',
-      messages: [
-        {
-          role: 'system',
-          content: systemMessage
-        },
-        {
-          role: 'user',
-          content: readmeContent
-        }
-      ],
-      max_tokens: 500,
-      temperature: 0.7,
-    }, {
+    // Use fetch for streaming instead of axios
+    const response = await fetch(`${import.meta.env.VITE_APP_AI_API_URL}/v1/chat/completions`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer sk-bjVyHrUs47OXpZ6n2d058d0337E4469eB7F01948D730B0Cd`,
+        'Authorization': `Bearer ${import.meta.env.VITE_APP_AI_API_TOKEN}`,
       },
-      timeout: 10000, // 10 second timeout for analysis
+      body: JSON.stringify({
+        model: import.meta.env.VITE_APP_AI_MODEL,
+        messages: [
+          {
+            role: 'system',
+            content: systemMessage
+          },
+          {
+            role: 'user',
+            content: readmeContent
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.7,
+        stream: true, // Enable streaming
+      }),
     });
 
-    if (!openaiResponse.data?.choices?.[0]?.message?.content) {
-      throw new Error('Invalid response from analysis service');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return openaiResponse.data.choices[0].message.content;
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('Failed to get response reader');
+    }
+
+    let fullContent = '';
+    const decoder = new TextDecoder();
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n').filter(line => line.trim() !== '');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') continue;
+
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) {
+                fullContent += content;
+                // Call progress callback if provided
+                if (onProgress) {
+                  onProgress(content);
+                }
+              }
+            } catch (parseError) {
+              // Skip invalid JSON lines
+              continue;
+            }
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    if (!fullContent) {
+      throw new Error('No content received from analysis service');
+    }
+
+    return fullContent;
   } catch (error: any) {
-    if (error.code === 'ECONNABORTED') {
+    // Handle GitHub API errors first
+    if (error.response) {
+      const gitHubError = handleError(error);
+      return gitHubError;
+    }
+    
+    // Handle other errors
+    if (error.name === 'AbortError') {
+      return { error: 'Request was cancelled.' };
+    }
+    if (error.message?.includes('timeout')) {
       return { error: 'Request timed out. Please try again.' };
     }
-    if (error.response?.status === 404) {
+    if (error.message?.includes('404')) {
       return { error: 'README not found in this repository.' };
     }
     return { error: error.message || 'Failed to analyze README' };

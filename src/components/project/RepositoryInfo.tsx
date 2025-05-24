@@ -38,15 +38,22 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
     
     setAnalysisLoading(true);
     setAnalysisError(null);
+    setReadmeAnalysis(''); // Clear previous content for streaming
     
     const [owner, repo] = repository.full_name.split('/');
-    const result = await analyzeReadme(owner, repo);
+    
+    // Handle streaming content
+    const handleStreamChunk = (chunk: string) => {
+      setReadmeAnalysis(prev => (prev || '') + chunk);
+    };
+    
+    const result = await analyzeReadme(owner, repo, handleStreamChunk);
     
     if (typeof result === 'object' && result !== null && 'error' in result) {
       setAnalysisError(result.error);
-    } else {
-      setReadmeAnalysis(result as string);
+      setReadmeAnalysis(''); // Clear any partial content on error
     }
+    // Note: We don't set the final result here since it's already set via streaming
     
     setAnalysisLoading(false);
   };
@@ -55,7 +62,7 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
   useEffect(() => {
     if (repository) {
       // Reset previous analysis state
-      setReadmeAnalysis(null);
+      setReadmeAnalysis('');
       setAnalysisError(null);
       setAnalysisLoading(false);
       
@@ -185,13 +192,26 @@ const RepositoryInfo: React.FC<RepositoryInfoProps> = ({
       </div>
       
       {/* README Analysis Section */}
-      {(readmeAnalysis || analysisError) && (
+      {(readmeAnalysis || analysisError || analysisLoading) && (
         <div className="mb-6 p-4 bg-slate-50 rounded-lg">
-          <h3 className="text-lg font-medium mb-2">README Analysis</h3>
+          <h3 className="text-lg font-medium mb-2 flex items-center">
+            README Analysis
+            {analysisLoading && (
+              <Loader size={16} className="ml-2 animate-spin text-blue-600" />
+            )}
+          </h3>
           {analysisError ? (
             <p className="text-red-600">{analysisError}</p>
           ) : (
-            <p className="text-slate-700 whitespace-pre-wrap">{readmeAnalysis}</p>
+            <div className="text-slate-700 whitespace-pre-wrap">
+              {readmeAnalysis}
+              {analysisLoading && !readmeAnalysis && (
+                <p className="text-slate-500 italic">开始分析...</p>
+              )}
+              {analysisLoading && readmeAnalysis && (
+                <span className="inline-block w-2 h-5 bg-blue-600 animate-pulse ml-1">│</span>
+              )}
+            </div>
           )}
         </div>
       )}
