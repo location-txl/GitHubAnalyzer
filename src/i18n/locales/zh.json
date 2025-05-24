@@ -8,6 +8,22 @@
     "description": "GitHub 仓库的全面分析",
     "addToken": "添加令牌",
     "removeToken": "移除令牌",
+    "settings": "设置",
+    "settingsModal": {
+      "title": "设置选项",
+      "description": "配置您的GitHub访问和语言偏好",
+      "languageSettings": "语言设置",
+      "githubToken": "GitHub访问令牌",
+      "tokenConfigured": "已配置",
+      "tokenNotConfigured": "未配置",
+      "saveToken": "保存令牌",
+      "tokenSaved": "令牌已配置",
+      "tokenSavedDescription": "令牌已保存，可以访问更多API功能",
+      "removeToken": "移除令牌",
+      "tokenTip": "提示：",
+      "tokenDescription": "GitHub令牌可以提高API请求限制并访问私有仓库。令牌仅存储在本地浏览器中。",
+      "closeSettings": "关闭设置"
+    },
     "tokenModal": {
       "title": "GitHub 令牌",
       "placeholder": "请输入您的 GitHub 令牌",

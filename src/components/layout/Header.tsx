@@ -74,38 +74,38 @@ const Header: React.FC = () => {
                 }`}
               >
                 <Settings size={16} className="mr-2" />
-                <span className="text-sm font-medium">设置</span>
+                <span className="text-sm font-medium">{t('header.settings')}</span>
               </button>
               
               {/* Settings Dropdown Menu */}
               {showSettings && (
                 <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
                   <div className="p-4 bg-slate-50 border-b border-slate-200">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-1">设置选项</h3>
-                    <p className="text-sm text-slate-600">配置您的GitHub访问和语言偏好</p>
+                    <h3 className="text-lg font-semibold text-slate-800 mb-1">{t('header.settingsModal.title')}</h3>
+                    <p className="text-sm text-slate-600">{t('header.settingsModal.description')}</p>
                   </div>
                   
                   <div className="p-4 space-y-4">
                     {/* Language Section - Mobile Only */}
-                    <div className="block sm:hidden">
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium text-slate-700">语言设置</label>
+                                          <div className="block sm:hidden">
+                        <div className="flex items-center justify-between mb-2">
+                          <label className="text-sm font-medium text-slate-700">{t('header.settingsModal.languageSettings')}</label>
+                        </div>
+                        <LanguageSwitcher />
                       </div>
-                      <LanguageSwitcher />
-                    </div>
                     
                     {/* Token Section */}
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <label className="text-sm font-medium text-slate-700">GitHub访问令牌</label>
-                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          savedToken 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-amber-100 text-amber-700'
-                        }`}>
-                          {savedToken ? '已配置' : '未配置'}
+                                          <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <label className="text-sm font-medium text-slate-700">{t('header.settingsModal.githubToken')}</label>
+                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            savedToken 
+                              ? 'bg-green-100 text-green-700' 
+                              : 'bg-amber-100 text-amber-700'
+                          }`}>
+                            {savedToken ? t('header.settingsModal.tokenConfigured') : t('header.settingsModal.tokenNotConfigured')}
+                          </div>
                         </div>
-                      </div>
                       
                       {!savedToken ? (
                         <div className="space-y-3">
@@ -123,7 +123,7 @@ const Header: React.FC = () => {
                             className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-2 text-sm font-medium transition-colors"
                           >
                             <Key size={16} className="inline mr-2" />
-                            保存令牌
+                            {t('header.settingsModal.saveToken')}
                           </button>
                         </div>
                       ) : (
@@ -131,10 +131,10 @@ const Header: React.FC = () => {
                           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                             <div className="flex items-center text-green-700">
                               <Key size={16} className="mr-2" />
-                              <span className="text-sm font-medium">令牌已配置</span>
+                              <span className="text-sm font-medium">{t('header.settingsModal.tokenSaved')}</span>
                             </div>
                             <p className="text-xs text-green-600 mt-1">
-                              令牌已保存，可以访问更多API功能
+                              {t('header.settingsModal.tokenSavedDescription')}
                             </p>
                           </div>
                           <button
@@ -142,15 +142,14 @@ const Header: React.FC = () => {
                             className="w-full bg-rose-600 hover:bg-rose-700 text-white rounded-lg py-2 text-sm font-medium transition-colors"
                           >
                             <X size={16} className="inline mr-2" />
-                            移除令牌
+                            {t('header.settingsModal.removeToken')}
                           </button>
                         </div>
                       )}
                       
                       <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <p className="text-xs text-blue-700">
-                          <strong>提示：</strong>GitHub令牌可以提高API请求限制并访问私有仓库。
-                          令牌仅存储在本地浏览器中。
+                          <strong>{t('header.settingsModal.tokenTip')}</strong>{t('header.settingsModal.tokenDescription')}
                         </p>
                       </div>
                     </div>
@@ -162,7 +161,7 @@ const Header: React.FC = () => {
                       onClick={() => setShowSettings(false)}
                       className="w-full text-center text-sm text-slate-600 hover:text-slate-800 transition-colors"
                     >
-                      关闭设置
+                      {t('header.settingsModal.closeSettings')}
                     </button>
                   </div>
                 </div>

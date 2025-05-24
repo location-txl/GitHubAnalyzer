@@ -8,6 +8,22 @@
     "description": "Comprehensive analysis for GitHub repositories",
     "addToken": "Add Token",
     "removeToken": "Remove Token",
+    "settings": "Settings",
+    "settingsModal": {
+      "title": "Settings Options",
+      "description": "Configure your GitHub access and language preferences",
+      "languageSettings": "Language Settings",
+      "githubToken": "GitHub Access Token",
+      "tokenConfigured": "Configured",
+      "tokenNotConfigured": "Not Configured",
+      "saveToken": "Save Token",
+      "tokenSaved": "Token Configured",
+      "tokenSavedDescription": "Token saved, you can now access more API features",
+      "removeToken": "Remove Token",
+      "tokenTip": "Tip:",
+      "tokenDescription": "GitHub tokens can increase API request limits and access private repositories. Tokens are stored locally in your browser only.",
+      "closeSettings": "Close Settings"
+    },
     "tokenModal": {
       "title": "GitHub Token",
       "placeholder": "Enter your GitHub token",
