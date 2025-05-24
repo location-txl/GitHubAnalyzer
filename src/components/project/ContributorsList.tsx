@@ -2,6 +2,7 @@ import React from 'react';
 import { Users, AlertCircle, ExternalLink } from 'lucide-react';
 import { Contributor } from '../../types';
 import LoadingCard from '../ui/LoadingCard';
+import { useTranslation } from 'react-i18next';
 
 interface ContributorsListProps {
   contributors: Contributor[];
@@ -10,8 +11,9 @@ interface ContributorsListProps {
 }
 
 const ContributorsList: React.FC<ContributorsListProps> = ({ contributors, loading, error }) => {
+  const { t } = useTranslation();
   if (loading) {
-    return <LoadingCard title="Top Contributors" />;
+    return <LoadingCard title={t('contributors.loading')} />;
   }
   
   if (error) {
@@ -19,7 +21,7 @@ const ContributorsList: React.FC<ContributorsListProps> = ({ contributors, loadi
       <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 h-full">
         <div className="flex items-center text-red-500 mb-4">
           <AlertCircle size={20} className="mr-2" />
-          <h3 className="text-lg font-medium">Error Loading Contributors</h3>
+          <h3 className="text-lg font-medium">{t('contributors.error')}</h3>
         </div>
         <p className="text-slate-600">{error}</p>
       </div>
@@ -29,10 +31,10 @@ const ContributorsList: React.FC<ContributorsListProps> = ({ contributors, loadi
   if (!contributors || contributors.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 h-full">
-        <h2 className="text-xl font-semibold mb-4">Top Contributors</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('contributors.title')}</h2>
         <div className="flex flex-col items-center justify-center py-8">
           <Users size={48} className="text-slate-300 mb-4" />
-          <p className="text-slate-500 text-center">No contributor data available</p>
+          <p className="text-slate-500 text-center">{t('contributors.noData')}</p>
         </div>
       </div>
     );
@@ -48,10 +50,10 @@ const ContributorsList: React.FC<ContributorsListProps> = ({ contributors, loadi
   
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 h-full">
-      <h2 className="text-xl font-semibold mb-4">Top Contributors</h2>
+      <h2 className="text-xl font-semibold mb-4">{t('contributors.title')}</h2>
       
       <div className="mb-4">
-        <p className="text-slate-600 mb-1">Total contributors</p>
+        <p className="text-slate-600 mb-1">{t('contributors.totalContributors')}</p>
         <p className="text-2xl font-semibold">{contributors.length}</p>
       </div>
       
@@ -97,7 +99,7 @@ const ContributorsList: React.FC<ContributorsListProps> = ({ contributors, loadi
         
         {contributors.length > 10 && (
           <p className="text-sm text-slate-500 text-center mt-4">
-            + {contributors.length - 10} more contributors
+            + {contributors.length - 10} {t('contributors.moreContributors')}
           </p>
         )}
       </div>

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { ActivityEvent } from '../../types';
 import LoadingCard from '../ui/LoadingCard';
+import { useTranslation } from 'react-i18next';
 
 interface ActivityFeedProps {
   activities: ActivityEvent[];
@@ -23,9 +24,9 @@ interface ActivityFeedProps {
 
 const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading, error }) => {
   const [filter, setFilter] = useState<string>('all');
-  
+  const { t } = useTranslation();
   if (loading) {
-    return <LoadingCard title="Recent Activity" height="lg" />;
+    return <LoadingCard title={t('activity.loading')} height="lg" />;
   }
   
   if (error) {
@@ -43,10 +44,10 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading, error 
   if (!activities || activities.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-        <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('activity.title')}</h2>
         <div className="flex flex-col items-center justify-center py-8">
           <ActivitySquare size={48} className="text-slate-300 mb-4" />
-          <p className="text-slate-500 text-center">No recent activity available</p>
+          <p className="text-slate-500 text-center">{t('activity.noData')}</p>
         </div>
       </div>
     );
@@ -63,7 +64,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading, error 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-        <h2 className="text-xl font-semibold">Recent Activity</h2>
+        <h2 className="text-xl font-semibold">{t('activity.title')}</h2>
         
         <div className="mt-2 sm:mt-0">
           <select

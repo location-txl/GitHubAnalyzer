@@ -1,0 +1,105 @@
+{
+  "app": {
+    "title": "GitHub 分析器",
+    "description": "GitHub 仓库的全面分析"
+  },
+  "header": {
+    "title": "GitHub 分析器",
+    "description": "GitHub 仓库的全面分析",
+    "addToken": "添加令牌",
+    "removeToken": "移除令牌",
+    "tokenModal": {
+      "title": "GitHub 令牌",
+      "placeholder": "请输入您的 GitHub 令牌",
+      "save": "保存令牌",
+      "description": "令牌将本地存储并用于 API 请求"
+    }
+  },
+  "search": {
+    "placeholder": "搜索 GitHub 仓库（例如：facebook/react）",
+    "button": "搜索",
+    "loading": "搜索中...",
+    "noResults": "未找到仓库",
+    "error": "搜索仓库时出错",
+    "title": "搜索 GitHub 仓库"
+  },
+  "repository": {
+    "title": "仓库信息",
+    "reAnalyze": "重新分析",
+    "compare": "比较",
+    "export": "导出",
+    "exportJson": "导出为 JSON",
+    "exportCsv": "导出为 CSV",
+    "stats": {
+      "stars": "星标",
+      "forks": "分叉",
+      "watchers": "关注者",
+      "issues": "问题"
+    },
+    "details": {
+      "createdOn": "创建于",
+      "lastUpdated": "最后更新",
+      "defaultBranch": "默认分支",
+      "license": "许可证",
+      "noLicense": "无许可证"
+    }
+  },
+  "codeStats": {
+    "title": "代码统计",
+    "totalSize": "代码总大小",
+    "noData": "无语言数据",
+    "error": "加载代码统计时出错",
+    "languageBreakdown": "语言分布"
+  },
+  "contributors": {
+    "title": "主要贡献者",
+    "noData": "无贡献者数据",
+    "error": "加载贡献者时出错",
+    "totalContributors": "总贡献者",
+    "moreContributors": "更多贡献者"
+  },
+  "activity": {
+    "title": "最近活动",
+    "noData": "无最近活动",
+    "error": "加载活动推送时出错"
+  },
+  "comparison": {
+    "title": "仓库比较",
+    "export": "导出",
+    "exportJson": "导出为 JSON",
+    "exportCsv": "导出为 CSV",
+    "clearAll": "清除全部",
+    "starsComparison": "星标比较",
+    "forksComparison": "分叉比较",
+    "issuesComparison": "问题比较",
+    "mainLanguage": "主要语言：",
+    "contributors": "贡献者：",
+    "created": "创建时间："
+  },
+  "emptyState": {
+    "title": "欢迎使用 GitHub 分析器",
+    "subtitle": "发现、分析和比较 GitHub 仓库",
+    "searchPrompt": "在上方搜索仓库开始使用",
+    "trending": "热门项目",
+    "features": {
+      "statistics": {
+        "title": "项目统计",
+        "description": "分析星标、分叉、问题和其他数据"
+      },
+      "codeAnalysis": {
+        "title": "代码分析",
+        "description": "查看语言分布和代码指标"
+      },
+      "contributors": {
+        "title": "贡献者洞察",
+        "description": "了解项目贡献者状态"
+      }
+    }
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "noDescription": "无描述",
+    "na": "不可用"
+  }
+} 

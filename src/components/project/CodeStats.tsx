@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { FileCode, AlertCircle } from 'lucide-react';
 import { Language } from '../../types';
@@ -29,8 +30,10 @@ const CHART_COLORS = [
 ];
 
 const CodeStats: React.FC<CodeStatsProps> = ({ languages, loading, error }) => {
+  const { t } = useTranslation();
+  
   if (loading) {
-    return <LoadingCard title="Code Statistics" />;
+    return <LoadingCard title={t('codeStats.title')} />;
   }
   
   if (error) {
@@ -38,7 +41,7 @@ const CodeStats: React.FC<CodeStatsProps> = ({ languages, loading, error }) => {
       <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 h-full">
         <div className="flex items-center text-red-500 mb-4">
           <AlertCircle size={20} className="mr-2" />
-          <h3 className="text-lg font-medium">Error Loading Code Statistics</h3>
+          <h3 className="text-lg font-medium">{t('codeStats.error')}</h3>
         </div>
         <p className="text-slate-600">{error}</p>
       </div>
@@ -48,10 +51,10 @@ const CodeStats: React.FC<CodeStatsProps> = ({ languages, loading, error }) => {
   if (!languages || languages.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 h-full">
-        <h2 className="text-xl font-semibold mb-4">Code Statistics</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('codeStats.title')}</h2>
         <div className="flex flex-col items-center justify-center py-8">
           <FileCode size={48} className="text-slate-300 mb-4" />
-          <p className="text-slate-500 text-center">No language data available</p>
+          <p className="text-slate-500 text-center">{t('codeStats.noData')}</p>
         </div>
       </div>
     );
@@ -101,10 +104,10 @@ const CodeStats: React.FC<CodeStatsProps> = ({ languages, loading, error }) => {
   
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 h-full">
-      <h2 className="text-xl font-semibold mb-4">Code Statistics</h2>
+      <h2 className="text-xl font-semibold mb-4">{t('codeStats.title')}</h2>
       
       <div className="mb-4">
-        <p className="text-slate-600 mb-1">Total code size</p>
+        <p className="text-slate-600 mb-1">{t('codeStats.totalSize')}</p>
         <p className="text-2xl font-semibold">{formattedTotalSize}</p>
       </div>
       
@@ -113,7 +116,7 @@ const CodeStats: React.FC<CodeStatsProps> = ({ languages, loading, error }) => {
       </div>
       
       <div className="mt-4">
-        <h3 className="text-md font-medium mb-2">Language Breakdown</h3>
+        <h3 className="text-md font-medium mb-2">{t('codeStats.languageBreakdown')}</h3>
         <div className="space-y-2 max-h-60 overflow-y-auto">
           {sortedLanguages.map((lang, index) => (
             <div key={lang.name} className="flex items-center justify-between">

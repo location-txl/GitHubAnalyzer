@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { Search, History } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Repository } from '../../types';
 
 interface SearchBarProps {
@@ -9,6 +10,7 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, recentRepositories, isLoading }) => {
+  const { t } = useTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [showHistory, setShowHistory] = useState(false);
   
@@ -36,7 +38,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, recentRepositories, isL
           <input
             type="text"
             className="block w-full p-3 pl-10 pr-20 text-sm text-slate-900 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-            placeholder="Enter repository URL or owner/name (e.g., facebook/react)"
+            placeholder={t('search.placeholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onFocus={() => recentRepositories.length > 0 && setShowHistory(true)}
@@ -54,7 +56,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, recentRepositories, isL
             disabled={isLoading}
             className="absolute right-2.5 top-1/2 transform -translate-y-1/2 px-3 py-1.5 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Loading...' : 'Search'}
+            {isLoading ? t('search.loading') : t('search.button')}
           </button>
         </div>
       </form>

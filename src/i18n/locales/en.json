@@ -1,0 +1,105 @@
+{
+  "app": {
+    "title": "GitHub Analyzer",
+    "description": "Comprehensive analysis for GitHub repositories"
+  },
+  "header": {
+    "title": "GitHub Analyzer",
+    "description": "Comprehensive analysis for GitHub repositories",
+    "addToken": "Add Token",
+    "removeToken": "Remove Token",
+    "tokenModal": {
+      "title": "GitHub Token",
+      "placeholder": "Enter your GitHub token",
+      "save": "Save Token",
+      "description": "Token will be stored locally and used for API requests"
+    }
+  },
+  "search": {
+    "placeholder": "Search GitHub repositories (e.g., facebook/react)",
+    "button": "Search",
+    "loading": "Searching...",
+    "noResults": "No repositories found",
+    "error": "Error searching repositories",
+    "title": "Search GitHub Repository"
+  },
+  "repository": {
+    "title": "Repository Information",
+    "reAnalyze": "Re-analyze",
+    "compare": "Compare",
+    "export": "Export",
+    "exportJson": "Export as JSON",
+    "exportCsv": "Export as CSV",
+    "stats": {
+      "stars": "Stars",
+      "forks": "Forks",
+      "watchers": "Watchers",
+      "issues": "Issues"
+    },
+    "details": {
+      "createdOn": "Created on",
+      "lastUpdated": "Last updated",
+      "defaultBranch": "Default branch",
+      "license": "License",
+      "noLicense": "No license"
+    }
+  },
+  "codeStats": {
+    "title": "Code Statistics",
+    "totalSize": "Total code size",
+    "noData": "No language data available",
+    "error": "Error Loading Code Statistics",
+    "languageBreakdown": "Language Breakdown"
+  },
+  "contributors": {
+    "title": "Top Contributors",
+    "noData": "No contributor data available",
+    "error": "Error Loading Contributors",
+    "totalContributors": "Total contributors",
+    "moreContributors": "more contributors"
+  },
+  "activity": {
+    "title": "Recent Activity",
+    "noData": "No recent activity available",
+    "error": "Error Loading Activity Feed"
+  },
+  "comparison": {
+    "title": "Repository Comparison",
+    "export": "Export",
+    "exportJson": "Export as JSON",
+    "exportCsv": "Export as CSV",
+    "clearAll": "Clear All",
+    "starsComparison": "Stars Comparison",
+    "forksComparison": "Forks Comparison",
+    "issuesComparison": "Issues Comparison",
+    "mainLanguage": "Main language:",
+    "contributors": "Contributors:",
+    "created": "Created:"
+  },
+  "emptyState": {
+    "title": "Welcome to GitHub Analyzer",
+    "subtitle": "Discover, analyze, and compare GitHub repositories",
+    "searchPrompt": "Search for a repository above to get started",
+    "trending": "Trending Projects",
+    "features": {
+      "statistics": {
+        "title": "Project Statistics",
+        "description": "Analyze stars, forks, issues and other data"
+      },
+      "codeAnalysis": {
+        "title": "Code Analysis",
+        "description": "View language distribution and code metrics"
+      },
+      "contributors": {
+        "title": "Contributor Insights",
+        "description": "Understand project contributor status"
+      }
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "noDescription": "No description",
+    "na": "N/A"
+  }
+} 

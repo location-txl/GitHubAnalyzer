@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GitBranch, Search, Star, GitFork, TrendingUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { getTrendingRepositories } from '../../services/githubApi';
 import { Repository } from '../../types';
 
@@ -78,6 +79,7 @@ const fallbackTrendingRepos: Repository[] = [
 ];
 
 const EmptyState: React.FC<EmptyStateProps> = ({ onRepositorySelect }) => {
+  const { t } = useTranslation();
   const [trendingRepos, setTrendingRepos] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -124,21 +126,21 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onRepositorySelect }) => {
           <GitBranch size={48} className="text-slate-400" />
         </div>
         <h2 className="text-2xl font-semibold text-slate-800 mb-2">
-          Welcome to GitHub Analyzer
+          {t('emptyState.title')}
         </h2>
         <p className="text-slate-600 text-center max-w-md mb-6">
-          Enter a GitHub repository URL or owner/name (e.g., facebook/react) in the search bar above to start analyzing.
+          {t('emptyState.subtitle')}
         </p>
         <div className="flex items-center text-teal-600 bg-teal-50 px-4 py-3 rounded-lg">
           <Search size={20} className="mr-2" />
-          <p className="text-sm">Search for a repository to get started</p>
+          <p className="text-sm">{t('emptyState.searchPrompt')}</p>
         </div>
         
         {/* 热门项目推荐 */}
         <div className="mt-8 w-full max-w-4xl">
           <div className="flex items-center mb-4">
             <TrendingUp size={20} className="text-orange-500 mr-2" />
-            <h3 className="text-lg font-semibold text-slate-800">Trending This Week</h3>
+            <h3 className="text-lg font-semibold text-slate-800">{t('emptyState.trending')}</h3>
           </div>
           
           {loading ? (
@@ -169,7 +171,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onRepositorySelect }) => {
                   </h4>
                   <p className="text-xs text-slate-500 mb-2">{repo.owner.login}</p>
                   <p className="text-sm text-slate-600 mb-3 line-clamp-2">
-                    {repo.description || 'No description'}
+                    {repo.description || t('common.noDescription')}
                   </p>
                   <div className="flex items-center justify-between text-xs text-slate-500">
                     <div className="flex items-center space-x-3">
@@ -202,16 +204,16 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onRepositorySelect }) => {
         
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
           <div className="border border-slate-200 rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Project Statistics</h3>
-            <p className="text-sm text-slate-600">Analyze stars, forks, issues and other data</p>
+            <h3 className="font-semibold mb-2">{t('emptyState.features.statistics.title')}</h3>
+            <p className="text-sm text-slate-600">{t('emptyState.features.statistics.description')}</p>
           </div>
           <div className="border border-slate-200 rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Code Analysis</h3>
-            <p className="text-sm text-slate-600">View language distribution and code metrics</p>
+            <h3 className="font-semibold mb-2">{t('emptyState.features.codeAnalysis.title')}</h3>
+            <p className="text-sm text-slate-600">{t('emptyState.features.codeAnalysis.description')}</p>
           </div>
           <div className="border border-slate-200 rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Contributor Insights</h3>
-            <p className="text-sm text-slate-600">Understand project contributor status</p>
+            <h3 className="font-semibold mb-2">{t('emptyState.features.contributors.title')}</h3>
+            <p className="text-sm text-slate-600">{t('emptyState.features.contributors.description')}</p>
           </div>
         </div>
       </div>

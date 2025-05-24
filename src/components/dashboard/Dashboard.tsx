@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGithubData } from '../../hooks/useGithubData';
 import SearchBar from '../search/SearchBar';
 import RepositoryInfo from '../project/RepositoryInfo';
@@ -9,6 +10,7 @@ import ComparisonView from '../comparison/ComparisonView';
 import EmptyState from '../ui/EmptyState';
 
 const Dashboard: React.FC = () => {
+  const { t } = useTranslation();
   const { 
     currentRepository,
     repositories,
@@ -29,7 +31,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-        <h2 className="text-xl font-semibold mb-4">Search GitHub Repository</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('search.title', 'Search GitHub Repository')}</h2>
         <SearchBar 
           onSearch={fetchRepositoryData} 
           recentRepositories={repositories}
