@@ -130,49 +130,54 @@ export const parseRepoUrl = (url: string): { owner: string, repo: string } | nul
 export const analyzeReadme = async (owner: string, repo: string): Promise<string | { error: string }> => {
   try {
     // First, get the README content
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+    const readmeResponse = await axios.get(`https://api.github.com/repos/${owner}/${repo}/readme`, {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
       },
+      timeout: 5000, // 5 second timeout for README fetch
     });
 
-    if (!response.ok) {
+    if (!readmeResponse.data) {
       throw new Error('README not found');
     }
 
-    const readmeContent = await response.text();
+    const readmeContent = readmeResponse.data;
 
     // Then, analyze it with OpenAI
-    const openaiResponse = await fetch('https://api.v3.cm/v1/chat/completions', {
-      method: 'POST',
+    const openaiResponse = await axios.post('https://api.v3.cm/v1/chat/completions', {
+      model: 'gpt-4.1-mini',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a technical analyst specializing in analyzing GitHub repositories. Provide a concise but comprehensive summary of the repository based on its README content. Focus on the key features, purpose, and technical aspects.'
+        },
+        {
+          role: 'user',
+          content: readmeContent
+        }
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+    }, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer sk-bjVyHrUs47OXpZ6n2d058d0337E4469eB7F01948D730B0Cd`,
       },
-      body: JSON.stringify({
-        model: 'gpt-4.1-mini',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a technical analyst specializing in analyzing GitHub repositories. Provide a concise but comprehensive summary of the repository based on its README content. Focus on the key features, purpose, and technical aspects.'
-          },
-          {
-            role: 'user',
-            content: readmeContent
-          }
-        ],
-        max_tokens: 500,
-        temperature: 0.7,
-      }),
+      timeout: 10000, // 10 second timeout for analysis
     });
 
-    if (!openaiResponse.ok) {
-      throw new Error('Failed to analyze README');
+    if (!openaiResponse.data?.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response from analysis service');
     }
 
-    const data = await openaiResponse.json();
-    return data.choices[0].message.content;
+    return openaiResponse.data.choices[0].message.content;
   } catch (error) {
-    return { error: error.message };
+    if (error.code === 'ECONNABORTED') {
+      return { error: 'Request timed out. Please try again.' };
+    }
+    if (error.response?.status === 404) {
+      return { error: 'README not found in this repository.' };
+    }
+    return { error: error.message || 'Failed to analyze README' };
   }
 };
