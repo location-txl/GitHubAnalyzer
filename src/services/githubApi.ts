@@ -101,6 +101,21 @@ export const searchRepositories = async (query: string): Promise<Repository[] | 
   }
 };
 
+export const getTrendingRepositories = async (): Promise<Repository[] | { error: string, status?: number }> => {
+  try {
+    const api = createApiInstance();
+    // Get repositories with high stars created in the last month, sorted by stars
+    const lastMonth = new Date();
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+    const dateStr = lastMonth.toISOString().split('T')[0];
+    
+    const response = await api.get(`/search/repositories?q=created:>${dateStr} stars:>100&sort=stars&order=desc&per_page=3`);
+    return response.data.items;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const parseRepoUrl = (url: string): { owner: string, repo: string } | null => {
   // Handle full GitHub URLs
   const githubUrlPattern = /github\.com\/([^\/]+)\/([^\/]+)/;

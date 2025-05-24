@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
       </div>
       
       {!currentRepository && !isAnyLoading ? (
-        <EmptyState />
+        <EmptyState onRepositorySelect={fetchRepositoryData} />
       ) : (
         <>
           {/* Repository Information */}
