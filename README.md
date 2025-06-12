@@ -58,4 +58,4 @@ VITE_APP_GITHUB_DEF_TOKEN=<GitHub 默认 Token>
 
 ## 版权协议
 
-项目使用 MIT License 协议发布。
+项目使用 MIT License 协议发布，详情请参阅 LICENSE 文件。
