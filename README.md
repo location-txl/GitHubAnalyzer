@@ -1,94 +1,61 @@
-# GitHub Analyzer / GitHub 分析器
+# GitHub Analyzer
 
-一个功能强大的 GitHub 仓库分析工具，支持中英文双语界面。
+GitHub Analyzer 是一款使用 React 18 和 TypeScript 打造的 GitHub 库分析工具。它支持中英文界面，提供多种常用的库数据查询和分析功能，便于你对项目进行快速了解和比对。
 
-A powerful GitHub repository analysis tool with bilingual support (Chinese/English).
+## 功能介绍
 
-## 功能特性 / Features
+- 搜索任意公开仓库
+- 统计代码用量与语言分布
+- 查看热门仓库排行榜
+- 查看项目各类图表统计和动态活动
+- 进行多个项目数据对比
+- 将数据导出为 JSON 或 CSV 文件
+- 在页面上生成 AI README 分析
 
-- 🔍 **仓库搜索** / Repository Search
-- 📊 **代码统计** / Code Statistics  
-- 👥 **贡献者分析** / Contributor Analysis
-- 📈 **活动追踪** / Activity Tracking
-- 🔄 **仓库比较** / Repository Comparison
-- 🌐 **多语言支持** / Multi-language Support
-- 📤 **数据导出** / Data Export
-- 🤖 **AI README 分析** / AI README Analysis
+## 开发环境
 
-## 语言切换 / Language Switching
-
-应用支持中英文切换，点击右上角的语言切换按钮即可。语言设置会自动保存到本地存储。
-
-The application supports Chinese/English switching. Click the language switcher button in the top right corner. Language settings are automatically saved to local storage.
-
-## 技术栈 / Tech Stack
-
-- **前端框架**: React 18 + TypeScript
-- **样式**: Tailwind CSS
-- **图表**: Chart.js + react-chartjs-2
-- **图标**: Lucide React
-- **国际化**: react-i18next
-- **构建工具**: Vite
-- **日期处理**: date-fns
-
-## 开发 / Development
+先确保 Node.js 版本符合要求，然后安装依赖并启动服务：
 
 ```bash
-# 安装依赖 / Install dependencies
 npm install
-
-# 启动开发服务器 / Start development server
 npm run dev
+```
 
-# 构建生产版本 / Build for production
+若需构建生产版：
+
+```bash
 npm run build
 ```
 
-## 国际化配置 / i18n Configuration
+## 环境变量
 
-翻译文件位于 `src/i18n/locales/` 目录：
-- `en.json` - 英文翻译
-- `zh.json` - 中文翻译
-
-Translation files are located in `src/i18n/locales/`:
-- `en.json` - English translations
-- `zh.json` - Chinese translations
-
-## 环境变量 / Environment Variables
-
-创建 `.env` 文件并配置以下变量：
+项目需要配置下列环境变量，并将它们写入 `.env` 文件：
 
 ```env
-VITE_APP_AI_API_URL=your_ai_api_url
-VITE_APP_AI_API_TOKEN=your_ai_api_token
-VITE_APP_AI_MODEL=your_ai_model
-VITE_APP_GITHUB_DEF_TOKEN=your_github_token
+VITE_APP_AI_API_URL=<AI 服务地址>
+VITE_APP_AI_API_TOKEN=<AI 认证凭证>
+VITE_APP_AI_MODEL=<AI 模型名>
+VITE_APP_GITHUB_DEF_TOKEN=<GitHub 默认 Token>
 ```
 
-## 使用说明 / Usage
+## 使用指南
 
-1. **添加 GitHub Token** / Add GitHub Token
-   - 点击右上角的"添加令牌"按钮
-   - 输入您的 GitHub Personal Access Token
-   - Click "Add Token" button in the top right
-   - Enter your GitHub Personal Access Token
+1. 在设置面板添加或移除 GitHub Token，提高 API 限额
+2. 从页面顶部搜索目标仓库
+3. 查看代码统计、贡献者和最近活动
+4. 将仓库加入对比列表，查看多个项目的关键信息
+5. 可以导出 JSON 或 CSV 格式以供下载
+6. 启用 AI README 分析，得到项目概览
 
-2. **搜索仓库** / Search Repository
-   - 在搜索框中输入仓库名称（如：facebook/react）
-   - Enter repository name in search box (e.g., facebook/react)
+## 技术栈
 
-3. **查看分析结果** / View Analysis
-   - 查看仓库统计信息、代码分布、贡献者等
-   - View repository statistics, code distribution, contributors, etc.
+- React 18 + TypeScript
+- Tailwind CSS 风格化
+- Chart.js 统计图表
+- Supabase 作为数据库 API
+- Vite 开发和构建工具
+- i18next 多语言支持
 
-4. **比较仓库** / Compare Repositories
-   - 点击"比较"按钮将仓库添加到比较列表
-   - Click "Compare" button to add repositories to comparison
+## 版权协议
 
-5. **导出数据** / Export Data
-   - 支持导出 JSON 和 CSV 格式
-   - Support JSON and CSV export formats
-
-## 许可证 / License
-
-MIT License 
+项目使用 MIT License 协议发布，详情请参阅 LICENSE 文件。
