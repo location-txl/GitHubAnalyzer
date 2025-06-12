@@ -10,7 +10,7 @@ GitHub Analyzer 是一款使用 React 18 和 TypeScript 打造的 GitHub 库分�
 - 查看项目各类图表统计和动态活动
 - 进行多个项目数据对比
 - 将数据导出为 JSON 或 CSV 文件
-- 在页面上生成自动的 README 分析
+- 在页面上生成 AI README 分析
 
 ## 开发环境
 
@@ -40,10 +40,10 @@ VITE_APP_GITHUB_DEF_TOKEN=<GitHub 默认 Token>
 
 ## 使用指南
 
-1. 在页面上点击“设置”，添加或删除 GitHub Token，以增加 API 限制
+1. 在设置面板添加或移除 GitHub Token，提高 API 限额
 2. 从页面顶部搜索目标仓库
 3. 查看代码统计、贡献者和最近活动
-4. 加入比较列表，会显示多个库的关键资料
+4. 将仓库加入对比列表，查看多个项目的关键信息
 5. 可以导出 JSON 或 CSV 格式以供下载
 6. 启用 AI README 分析，得到项目概览
 
